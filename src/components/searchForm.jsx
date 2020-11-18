@@ -1,9 +1,21 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
+
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles((theme) => ({
-  
+  root: {
+    display: 'flex',
+    marginTop: 160
+  },
+  searchTextField: {
+    backgroundColor: '#FFF',
+    minWidth: 500
+  }
 }))
 
 
@@ -16,11 +28,31 @@ const SearchForm = () => {
 
   return (
     <form className={classes.root} autoComplete="off">
-      <TextField
-        value={query}
-        onChange={handleChange}
-        variant="outlined"
-      />
+      <Grid container alignItems="center" direction="column" spacing={3}>
+        <Grid item>
+          <label htmlFor="lotQuery">
+            <Typography variant="h5">
+              Wine search
+            </Typography>
+          </label>
+        </Grid>
+        <Grid item>
+          <TextField
+            id="lotQuery"
+            className={classes.searchTextField}
+            value={query}
+            onChange={handleChange}
+            variant="outlined"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            />
+          </Grid>
+      </Grid>
     </form>
   )
 }
