@@ -6,6 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
+import SvgIcon from '@material-ui/core/SvgIcon';
+
+import { ReactComponent as WineGlassIcon } from '../assets/wine-glass-icon.svg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,9 +34,16 @@ const SearchForm = () => {
       <Grid container alignItems="center" direction="column" spacing={3}>
         <Grid item>
           <label htmlFor="lotQuery">
-            <Typography variant="h5">
-              Wine search
-            </Typography>
+            <Grid container alignItems="center" spacing={1}>
+              <Grid item>
+                <Typography variant="h5">
+                  Wine search
+                </Typography>
+              </Grid>
+              <Grid item>
+                <SvgIcon component={WineGlassIcon} viewBox="0 0 24 28" />
+              </Grid>
+            </Grid>
           </label>
         </Grid>
         <Grid item>
@@ -43,6 +53,7 @@ const SearchForm = () => {
             value={query}
             onChange={handleChange}
             variant="outlined"
+            placeholder="Search by lot code or description"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
