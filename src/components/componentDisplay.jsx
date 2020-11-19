@@ -32,12 +32,15 @@ const tabOptions = [
 const useStyles = makeStyles((theme) => ({
   rightTextAlign: {
     textAlign: 'right'
+  },
+  listContainer: {
+    marginBottom: '2em'
   }
 }))
 
 const RowComponent = ({row, fields, classes, header}) => {
   return (
-    <Grid item key={row.id}>
+    <Grid item>
       <Card
         variant="outlined"
       >
@@ -109,16 +112,21 @@ const ComponentDisplay = (props) => {
           <Tab label={tab.label} value={tab.value} key={tab.value} />
         ))}
       </Tabs>
-      <Grid container alignItems="stretch" direction="column">
+      <Grid container alignItems="stretch" direction="column" className={classes.listContainer}>
         <RowComponent
           row={columns.map(c => c.headerName)}
           fields={[0, 1]}
           classes={classes}
           header
         />
-        {breakdown.map(item => {
-          return <RowComponent row={item} fields={columns.map(c => c.field)} classes={classes} />
-        })}
+        {breakdown.map(item => (
+          <RowComponent
+            key={item.id} 
+            row={item} 
+            fields={columns.map(c => c.field)} 
+            classes={classes} 
+          />
+        ))}
       </Grid>
     </>
   )
