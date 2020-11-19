@@ -13,6 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { ReactComponent as WineGlassIcon } from '../assets/wine-glass-icon.svg';
 import { searchLot } from '../api/winesearch'
+import { highlightQuery, formatVolume } from '../util'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,32 +31,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main
   }
 }))
-
-const highlightQuery = (query, strToMatch, className) => {
-  return findMatches([], query, strToMatch, 0, className)
-}
-
-const findMatches = (arr, query, strToMatch, index, className) => {
-  if (!strToMatch) {
-    return arr
-  }
-  const matchIndex = strToMatch.indexOf(query, index)
-  
-  if (matchIndex === -1) {
-    arr.push(strToMatch.substring(index))
-    return arr
-  }
-  
-  arr.push(strToMatch.substring(index, matchIndex))
-  arr.push(<span className={className}>{query}</span>)
-
-  const next = matchIndex + query.length
-  if (next > strToMatch.length - 1) {
-    return arr
-  }
-  return findMatches(arr, query, strToMatch, next)
-}
-
 
 const SearchForm = (props) => {
   const classes = useStyles()
@@ -116,6 +91,7 @@ const SearchForm = (props) => {
             onChange={handleChange}
             variant="outlined"
             placeholder="Search by lot code or description"
+            inputProps={{ autoFocus: 'true' }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -129,6 +105,7 @@ const SearchForm = (props) => {
           const { lotCode, description, tankCode, volume } = lot
           const lotCodeHighlight = highlightQuery(searchedQuery, lotCode, classes.highlight)
           const descriptionHighlight = highlightQuery(searchedQuery, description, classes.highlight)
+          const volumeFormatted = formatVolume(volume)
           return (
             <Grid item key={lotCode}>
               <Card
@@ -160,7 +137,7 @@ const SearchForm = (props) => {
                     </Grid>
                     <Grid item className={classes.searchSecondaryText}>
                       <Typography color="textSecondary">
-                        {volume}
+                        {volumeFormatted}
                       </Typography>
                       <Typography color="textSecondary">
                         {tankCode}
