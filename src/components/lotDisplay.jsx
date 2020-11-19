@@ -9,6 +9,8 @@ import Avatar from '@material-ui/core/Avatar';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
 
+import { ComponentDisplay } from './componentDisplay'
+
 const useStyles = makeStyles((theme) => ({
   fullWidth: {
     minWidth: 650
@@ -122,6 +124,7 @@ const LotDisplay = (props) => {
               </Typography>
             </Grid>
           </Grid>
+          <ComponentDisplay components={components} />
         </Grid>
       </Grid>
     </div>
