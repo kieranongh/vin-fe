@@ -91,7 +91,7 @@ const SearchForm = (props) => {
             onChange={handleChange}
             variant="outlined"
             placeholder="Search by lot code or description"
-            inputProps={{ autoFocus: 'true' }}
+            inputProps={{ autoFocus: true }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
