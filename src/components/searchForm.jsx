@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
 import { ReactComponent as WineGlassIcon } from '../assets/wine-glass-icon.svg';
@@ -23,12 +22,44 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#FFF',
     minWidth: 500
   },
+  searchSecondaryText: {
+    textAlign: 'right'
+  },
+  highlight: {
+    color: theme.palette.primary.main
+  }
 }))
+
+const highlightQuery = (query, strToMatch, className) => {
+  return findMatches([], query, strToMatch, 0, className)
+}
+
+const findMatches = (arr, query, strToMatch, index, className) => {
+  if (!strToMatch) {
+    return arr
+  }
+  const matchIndex = strToMatch.indexOf(query, index)
+  
+  if (matchIndex === -1) {
+    arr.push(strToMatch.substring(index))
+    return arr
+  }
+  
+  arr.push(strToMatch.substring(index, matchIndex))
+  arr.push(<span className={className}>{query}</span>)
+
+  const next = matchIndex + query.length
+  if (next > strToMatch.length - 1) {
+    return arr
+  }
+  return findMatches(arr, query, strToMatch, next)
+}
 
 
 const SearchForm = () => {
   const classes = useStyles();
   const [query, setQuery] = useState('')
+  const [searchedQuery, setSearchedQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   
   const handleChange = (event) => {
@@ -38,9 +69,16 @@ const SearchForm = () => {
 
   const debounceQuery = useCallback(
     debounce((val) => {
-      searchLot(val).then(res => {
-        setSearchResults(res)
-      })
+      // Don't search API for blank, everything will come back
+      if (val !== '') {
+        searchLot(val).then(res => {
+          setSearchResults(res)
+        })
+        setSearchedQuery(val)
+      } else {
+        setSearchResults([])
+        setSearchedQuery(val)
+      }
     }, 300),
     []
   )
@@ -81,6 +119,8 @@ const SearchForm = () => {
         </Grid>
         {searchResults.map(searchResult => {
           const { lotCode, description, tankCode, volume } = searchResult
+          const lotCodeHighlight = highlightQuery(searchedQuery, lotCode, classes.highlight)
+          const descriptionHighlight = highlightQuery(searchedQuery, description, classes.highlight)
           return (
             <Grid item key={lotCode}>
               <Card className={classes.root} variant="outlined">
@@ -88,17 +128,21 @@ const SearchForm = () => {
                   <Grid container justify="space-between">
                     <Grid item>
                       <Typography variant="h6" className={classes.title}>
-                        {lotCode}
+                        {lotCodeHighlight.map(chars => {
+                          return (chars)
+                        })}
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {description}
+                      <Typography variant="body2">
+                        {descriptionHighlight.map(chars => {
+                          return (chars)
+                        })}
                       </Typography>
                     </Grid>
-                    <Grid item style={{ textAlign: 'right' }}>
+                    <Grid item className={classes.searchSecondaryText}>
                       <Typography color="textSecondary">
                         {volume}
                       </Typography>
-                      <Typography color="textSecondary" component="p">
+                      <Typography color="textSecondary">
                         {tankCode}
                       </Typography>
                     </Grid>
@@ -108,10 +152,12 @@ const SearchForm = () => {
             </Grid>
           )
         })}
+        {searchResults.length === 0 && searchedQuery !== '' && (
+          <p>No results found</p>
+        )}
       </Grid>
     </form>
   )
 }
 
 export { SearchForm }
-  
