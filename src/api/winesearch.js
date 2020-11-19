@@ -14,7 +14,14 @@ const getLot = (lotCode) => {
     .then(data => data)
 }
 
+const getBreakdown = (lotCode, breakdownType) => {
+  return fetch(`${API_BASE}/breakdown/${breakdownType}/${lotCode}`)
+    .then(response => response.json())
+    .then(data => data)
+}
+
 export {
   searchLot,
-  getLot
+  getLot,
+  getBreakdown
 }
