@@ -16,10 +16,11 @@ import { searchLot } from '../api/winesearch'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: 500
   },
   searchTextField: {
     backgroundColor: '#FFF',
+  },
+  fullWidth: {
     minWidth: 500
   },
   searchSecondaryText: {
@@ -56,8 +57,11 @@ const findMatches = (arr, query, strToMatch, index, className) => {
 }
 
 
-const SearchForm = () => {
-  const classes = useStyles();
+const SearchForm = (props) => {
+  const classes = useStyles()
+
+  const { setSelectedLot } = props
+  
   const [query, setQuery] = useState('')
   const [searchedQuery, setSearchedQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
@@ -65,6 +69,10 @@ const SearchForm = () => {
   const handleChange = (event) => {
     setQuery(event.target.value)
     debounceQuery(event.target.value)
+  }
+
+  const selectLot = (lot) => (event) => {
+    setSelectedLot(lot)
   }
 
   const debounceQuery = useCallback(
@@ -84,7 +92,7 @@ const SearchForm = () => {
   )
 
   return (
-    <form className={classes.root} autoComplete="off">
+    <form className={classes.fullWidth} autoComplete="off">
       <Grid container alignItems="center" direction="column" spacing={3}>
         <Grid item>
           <label htmlFor="lotQuery">
@@ -103,7 +111,7 @@ const SearchForm = () => {
         <Grid item>
           <TextField
             id="lotQuery"
-            className={classes.searchTextField}
+            className={`${classes.searchTextField} ${classes.fullWidth}`}
             value={query}
             onChange={handleChange}
             variant="outlined"
@@ -117,24 +125,36 @@ const SearchForm = () => {
             }}
           />
         </Grid>
-        {searchResults.map(searchResult => {
-          const { lotCode, description, tankCode, volume } = searchResult
+        {searchResults.map(lot => {
+          const { lotCode, description, tankCode, volume } = lot
           const lotCodeHighlight = highlightQuery(searchedQuery, lotCode, classes.highlight)
           const descriptionHighlight = highlightQuery(searchedQuery, description, classes.highlight)
           return (
             <Grid item key={lotCode}>
-              <Card className={classes.root} variant="outlined">
+              <Card
+                variant="outlined"
+                className={classes.fullWidth}
+                onClick={selectLot(lot)}
+              >
                 <CardContent>
                   <Grid container justify="space-between">
                     <Grid item>
                       <Typography variant="h6" className={classes.title}>
-                        {lotCodeHighlight.map(chars => {
-                          return (chars)
+                        {lotCodeHighlight.map((chars, i) => {
+                          return (
+                            <React.Fragment key={i}>
+                              {chars}
+                            </React.Fragment>
+                          )
                         })}
                       </Typography>
                       <Typography variant="body2">
-                        {descriptionHighlight.map(chars => {
-                          return (chars)
+                        {descriptionHighlight.map((chars, i) => {
+                          return (
+                            <React.Fragment key={i}>
+                              {chars}
+                            </React.Fragment>
+                          )
                         })}
                       </Typography>
                     </Grid>
