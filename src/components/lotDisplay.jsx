@@ -10,6 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EditIcon from '@material-ui/icons/Edit';
 
+import { formatVolume } from '../util'
 import { ComponentDisplay } from './componentDisplay'
 
 const useStyles = makeStyles((theme) => ({
@@ -63,6 +64,8 @@ const LotDisplay = (props) => {
   const { closeLotDisplay } = props
 
   const [showEdit, setShowEdit] = useState(false)
+
+  const volumeFormatted = formatVolume(volume)
 
   const handleEditClick = () => {
     setShowEdit(true)
@@ -124,7 +127,7 @@ const LotDisplay = (props) => {
           </Grid>
           <Grid item className={classes.rightTextAlign}>
             <Typography>
-              {volume}
+              {volumeFormatted}
             </Typography>
             <Typography>
               {tankCode}
