@@ -1,5 +1,6 @@
 
-const API_BASE = 'http://localhost:43000/api'
+const port = process.env.REACT_APP_API_PORT || 43000
+const API_BASE = `http://localhost:${port}/api`
 
 const searchLot = (query) => {
   const params = new URLSearchParams({ query })
