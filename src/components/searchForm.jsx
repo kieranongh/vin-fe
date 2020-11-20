@@ -8,6 +8,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import SvgIcon from '@material-ui/core/SvgIcon';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
@@ -16,13 +17,18 @@ import { searchLot } from '../api/winesearch'
 import { highlightQuery, formatVolume } from '../util'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  title: {
+    marginBottom: theme.spacing(3)
   },
   searchTextField: {
     backgroundColor: '#FFF',
   },
   fullWidth: {
     minWidth: 500
+  },
+  searchPrimaryText: {
+    width: 350,
+    textAlign: 'left'
   },
   searchSecondaryText: {
     textAlign: 'right'
@@ -68,8 +74,8 @@ const SearchForm = (props) => {
 
   return (
     <form className={classes.fullWidth} autoComplete="off">
-      <Grid container alignItems="center" direction="column" spacing={3}>
-        <Grid item>
+      <Grid container alignItems="center" direction="column">
+        <Grid item className={classes.title}>
           <label htmlFor="lotQuery">
             <Grid container alignItems="center" spacing={1}>
               <Grid item>
@@ -108,44 +114,48 @@ const SearchForm = (props) => {
           const volumeFormatted = formatVolume(volume)
           return (
             <Grid item key={lotCode}>
-              <Card
-                variant="outlined"
-                className={classes.fullWidth}
-                onClick={selectLot(lot)}
+              <ButtonBase
+                focusRipple
               >
-                <CardContent>
-                  <Grid container justify="space-between">
-                    <Grid item>
-                      <Typography variant="h6" className={classes.title}>
-                        {lotCodeHighlight.map((chars, i) => {
-                          return (
-                            <React.Fragment key={i}>
-                              {chars}
-                            </React.Fragment>
-                          )
-                        })}
-                      </Typography>
-                      <Typography variant="body2">
-                        {descriptionHighlight.map((chars, i) => {
-                          return (
-                            <React.Fragment key={i}>
-                              {chars}
-                            </React.Fragment>
-                          )
-                        })}
-                      </Typography>
+                <Card
+                  variant="outlined"
+                  className={classes.fullWidth}
+                  onClick={selectLot(lot)}
+                >
+                  <CardContent>
+                    <Grid container justify="space-between">
+                      <Grid item className={classes.searchPrimaryText}>
+                        <Typography variant="h6" className={classes.title}>
+                          {lotCodeHighlight.map((chars, i) => {
+                            return (
+                              <React.Fragment key={i}>
+                                {chars}
+                              </React.Fragment>
+                            )
+                          })}
+                        </Typography>
+                        <Typography variant="body2">
+                          {descriptionHighlight.map((chars, i) => {
+                            return (
+                              <React.Fragment key={i}>
+                                {chars}
+                              </React.Fragment>
+                            )
+                          })}
+                        </Typography>
+                      </Grid>
+                      <Grid item className={classes.searchSecondaryText}>
+                        <Typography color="textSecondary">
+                          {volumeFormatted}
+                        </Typography>
+                        <Typography color="textSecondary">
+                          {tankCode}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item className={classes.searchSecondaryText}>
-                      <Typography color="textSecondary">
-                        {volumeFormatted}
-                      </Typography>
-                      <Typography color="textSecondary">
-                        {tankCode}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </ButtonBase>
             </Grid>
           )
         })}
